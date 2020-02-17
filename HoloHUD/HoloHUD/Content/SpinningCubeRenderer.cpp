@@ -34,6 +34,11 @@ void SpinningCubeRenderer::PositionHologram(SpatialPointerPose const& pointerPos
     }
 }
 
+void SpinningCubeRenderer::TestPositionHologram()
+{
+    SetPosition({ 0.f, 0.f, -2.f });
+}
+
 // Called once per frame. Rotates the cube, and calculates and sets the model matrix
 // relative to the position transform indicated by hologramPositionTransform.
 void SpinningCubeRenderer::Update(DX::StepTimer const& timer)

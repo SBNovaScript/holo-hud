@@ -160,7 +160,7 @@ HolographicFrame HoloHUDMain::Update()
         {
             pose = pointerState.TryGetPointerPose(m_stationaryReferenceFrame.CoordinateSystem());
         }
-        else if (m_pointerPressed)
+        else
         {
             pose = SpatialPointerPose::TryGetAtTimestamp(m_stationaryReferenceFrame.CoordinateSystem(), prediction.Timestamp());
         }
@@ -172,8 +172,15 @@ HolographicFrame HoloHUDMain::Update()
     }
 #endif
 
-    m_timer.Tick([this]()
+    m_timer.Tick([&]()
     {
+            /*if (m_stationaryReferenceFrame != nullptr)
+            {
+                pose = SpatialPointerPose::TryGetAtTimestamp(m_stationaryReferenceFrame.CoordinateSystem(), prediction.Timestamp());
+                m_spinningCubeRenderer->TestPositionHologram();
+            }*/
+
+
         //
         // TODO: Update scene objects.
         //

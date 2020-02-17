@@ -19,6 +19,9 @@ namespace HoloHUD
         // Repositions the sample hologram.
         void PositionHologram(winrt::Windows::UI::Input::Spatial::SpatialPointerPose const& pointerPose);
 
+        // Tests positioning of the hologram.
+        void TestPositionHologram();
+
         // Property accessors.
         void SetPosition(winrt::Windows::Foundation::Numerics::float3 const& pos)   { m_position = pos;  }
         winrt::Windows::Foundation::Numerics::float3 const& GetPosition()           { return m_position; }
