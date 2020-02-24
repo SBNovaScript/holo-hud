@@ -10,10 +10,20 @@ namespace HoloHUD
     class SpinningCubeRenderer
     {
     public:
+
+        // devices resources is a smart pointer which holds a DeviceResources object.
         SpinningCubeRenderer(std::shared_ptr<DX::DeviceResources> const& deviceResources);
+
+        // future can get the result of an async call.
         std::future<void> CreateDeviceDependentResources();
+
+        // Resets all device dependant resources, including shaders and buffers.
         void ReleaseDeviceDependentResources();
+
+        // Update, using a StepTimer. StepTimer is a simplified way of managing a timed game loop.
         void Update(DX::StepTimer const& timer);
+
+        // Render one frame using vertex and pixel shaders.
         void Render();
 
         // Repositions the sample hologram.

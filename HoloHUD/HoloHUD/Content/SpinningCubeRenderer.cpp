@@ -25,8 +25,11 @@ void SpinningCubeRenderer::PositionHologram(SpatialPointerPose const& pointerPos
         const float3 headDirection = pointerPose.Head().ForwardDirection();
 
         // The hologram is positioned two meters along the user's gaze direction.
-        constexpr float distanceFromUser = 2.0f; // meters
-        const float3 gazeAtTwoMeters = headPosition + (distanceFromUser * headDirection);
+        constexpr float distanceFromUser = 1.5f; // meters
+
+        const float3 screenOffset = float3(0.2, 0.0, 0.0);
+
+        const float3 gazeAtTwoMeters = (headPosition - screenOffset) + (headDirection * distanceFromUser);
 
         // This will be used as the translation component of the hologram's
         // model transform.
@@ -174,6 +177,7 @@ std::future<void> SpinningCubeRenderer::CreateDeviceDependentResources()
     // Shaders will be loaded asynchronously.
 
     // After the vertex shader file is loaded, create the shader and input layout.
+    // check_hresult makes sure there is no error.
     std::vector<byte> vertexShaderFileData = co_await DX::ReadDataAsync(vertexShaderFileName);
     winrt::check_hresult(
         m_deviceResources->GetD3DDevice()->CreateVertexShader(
@@ -183,6 +187,7 @@ std::future<void> SpinningCubeRenderer::CreateDeviceDependentResources()
             &m_vertexShader
         ));
 
+    // Pass vertex and color data to the shader.
     constexpr std::array<D3D11_INPUT_ELEMENT_DESC, 2> vertexDesc =
         { {
             { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -248,11 +253,20 @@ std::future<void> SpinningCubeRenderer::CreateDeviceDependentResources()
             { XMFLOAT3( 0.1f,  0.1f,  0.1f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
         } };
 
+    static const std::array<VertexPositionColor, 5> prismVertices =
+    { {
+        { XMFLOAT3(-0.1f, -0.1f, -0.1f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+        { XMFLOAT3(-0.1f, -0.1f, 0.1f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+        { XMFLOAT3(-0.1f, 0.1f, -0.1f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+        { XMFLOAT3(-0.1f, 0.1f, 0.1f), XMFLOAT3(1.0f, 1.0f, 1.0f) },
+        { XMFLOAT3(0.1f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f) },
+    } };
+
     D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
-    vertexBufferData.pSysMem = cubeVertices.data();
+    vertexBufferData.pSysMem = prismVertices.data();
     vertexBufferData.SysMemPitch = 0;
     vertexBufferData.SysMemSlicePitch = 0;
-    const CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(VertexPositionColor) * static_cast<UINT>(cubeVertices.size()), D3D11_BIND_VERTEX_BUFFER);
+    const CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(VertexPositionColor) * static_cast<UINT>(prismVertices.size()), D3D11_BIND_VERTEX_BUFFER);
     winrt::check_hresult(
         m_deviceResources->GetD3DDevice()->CreateBuffer(
             &vertexBufferDesc,
@@ -287,13 +301,27 @@ std::future<void> SpinningCubeRenderer::CreateDeviceDependentResources()
             1,7,5,
         } };
 
-    m_indexCount = static_cast<unsigned int>(cubeIndices.size());
+    constexpr std::array<unsigned short, 18> prismIndices =
+    { {
+            2,1,0,
+            2,3,1,
+
+            3,4,1,
+
+            2,4,3,
+
+            0,4,2,
+
+            1,4,0,
+    } };
+
+    m_indexCount = static_cast<unsigned int>(prismIndices.size());
 
     D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
-    indexBufferData.pSysMem = cubeIndices.data();
+    indexBufferData.pSysMem = prismIndices.data();
     indexBufferData.SysMemPitch = 0;
     indexBufferData.SysMemSlicePitch = 0;
-    CD3D11_BUFFER_DESC indexBufferDesc(sizeof(unsigned short) * static_cast<UINT>(cubeIndices.size()), D3D11_BIND_INDEX_BUFFER);
+    CD3D11_BUFFER_DESC indexBufferDesc(sizeof(unsigned short) * static_cast<UINT>(prismIndices.size()), D3D11_BIND_INDEX_BUFFER);
     winrt::check_hresult(
         m_deviceResources->GetD3DDevice()->CreateBuffer(
             &indexBufferDesc,

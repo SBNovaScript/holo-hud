@@ -9,5 +9,16 @@ struct PixelShaderInput
 // is interpolated and assigned to a pixel at the rasterization step.
 min16float4 main(PixelShaderInput input) : SV_TARGET
 {
-    return min16float4(input.color, 1.0f);
+
+    min16float colorToUse = smoothstep(0, 1.0, input.color);
+
+    min16float3 finalColor = min16float3(0.7, colorToUse, colorToUse);
+
+    min16float sinCurrentPosX = sin(input.pos.x);
+    min16float sinCurrentPosY = sin(input.pos.y);
+    min16float sinCurrentPosZ = sin(input.pos.z);
+
+    min16float3 testColor = min16float3(sinCurrentPosX, sinCurrentPosY, sinCurrentPosZ);
+
+    return min16float4(testColor, 1.0);
 }
