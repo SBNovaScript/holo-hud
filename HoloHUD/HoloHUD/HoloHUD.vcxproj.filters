@@ -53,6 +53,9 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
       <Filter>Assets</Filter>
     </Image>
+    <Filter Include="Content\Components">
+      <UniqueIdentifier>{f62f0f7f-7e75-49cc-a853-f2708e49d2c0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -78,6 +81,9 @@
     <ClInclude Include="Content\ShaderStructures.h">
       <Filter>Content</Filter>
     </ClInclude>
+    <ClInclude Include="DirectionPointerRenderer.h">
+      <Filter>Content\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\VertexShaderShared.hlsl">
@@ -95,7 +101,6 @@
     <FxCompile Include="Content\VPRTVertexShader.hlsl">
       <Filter>Content\Shaders</Filter>
     </FxCompile>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />

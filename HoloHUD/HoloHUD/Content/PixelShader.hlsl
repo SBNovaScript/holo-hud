@@ -20,5 +20,5 @@ min16float4 main(PixelShaderInput input) : SV_TARGET
 
     min16float3 testColor = min16float3(sinCurrentPosX, sinCurrentPosY, sinCurrentPosZ);
 
-    return min16float4(testColor, 1.0);
+    return min16float4(finalColor, 1.0);
 }

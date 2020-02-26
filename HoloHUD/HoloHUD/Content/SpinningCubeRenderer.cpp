@@ -25,9 +25,9 @@ void SpinningCubeRenderer::PositionHologram(SpatialPointerPose const& pointerPos
         const float3 headDirection = pointerPose.Head().ForwardDirection();
 
         // The hologram is positioned two meters along the user's gaze direction.
-        constexpr float distanceFromUser = 1.5f; // meters
+        constexpr float distanceFromUser = 2.5f; // meters
 
-        const float3 screenOffset = float3(0.2, 0.0, 0.0);
+        const float3 screenOffset = float3(0.2f, -0.2f, 0.0f);
 
         const float3 gazeAtTwoMeters = (headPosition - screenOffset) + (headDirection * distanceFromUser);
 
@@ -51,7 +51,7 @@ void SpinningCubeRenderer::Update(DX::StepTimer const& timer)
     const float    radiansPerSecond = XMConvertToRadians(m_degreesPerSecond);
     const double   totalRotation = timer.GetTotalSeconds() * radiansPerSecond;
     const float    radians = static_cast<float>(fmod(totalRotation, XM_2PI));
-    const XMMATRIX modelRotation = XMMatrixRotationY(-radians);
+    const XMMATRIX modelRotation = XMMatrixRotationY(0);
 
     // Position the cube.
     const XMMATRIX modelTranslation = XMMatrixTranslationFromVector(XMLoadFloat3(&m_position));
